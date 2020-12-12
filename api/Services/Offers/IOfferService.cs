@@ -8,8 +8,8 @@ namespace api.Services {
     public interface IOfferService {
         Task<Offer> GetOffer(Guid id);
         Task<IEnumerable<OfferViewModel>> GetOffers();
-        Task<bool> AddOffer(AddOfferViewModel offer);
-        Task<bool> UpdateOffer(OfferViewModel offer);
+        Task<Offer> AddOffer(AddOfferViewModel offer);
+        Task<bool> UpdateOffer(OfferViewModel offer,Offer existingOffer);
         Task<bool> DeleteOffer(Offer offer);
     }
 }

@@ -63,25 +63,6 @@ namespace api.Migrations
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("api.Models.RunningNo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("TodayDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("referenceNo")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RunningNo");
-                });
 #pragma warning restore 612, 618
         }
     }

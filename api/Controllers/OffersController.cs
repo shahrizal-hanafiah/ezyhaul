@@ -17,6 +17,13 @@ namespace api
             _offerService = offerService;
         }
 
+        [HttpGet("{id}",Name ="GetOffer")]
+        public async Task<ActionResult> GetOffer()
+        {
+            var offers = await _offerService.GetOffers();
+            return new OkObjectResult(offers);
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetOffers()
         {
@@ -33,9 +40,9 @@ namespace api
 
             var result = await _offerService.AddOffer(offer);
 
-            if(result) return new NoContentResult();
+            if(result!=null) return new CreatedResult("GetOffer",new { id = result.Id});
 
-            return new BadRequestObjectResult("Problem adding offer");
+            return new BadRequestObjectResult("Problem adding the offer");
         }
 
         [HttpPut]
@@ -45,11 +52,16 @@ namespace api
             if (offer.PickupDateTime >= offer.DeliveryDateTime)
                 return new BadRequestObjectResult("Pickup date time should be earlier than delivery date time");
 
-            var result = await _offerService.UpdateOffer(offer);
+            var existingOffer = await _offerService.GetOffer(offer.Id);
 
-            if(result) return new NoContentResult();
+            if (offer == null)
+                return new NotFoundObjectResult("No offer found to update");
 
-            return new BadRequestObjectResult("Problem adding offer");
+            var result = await _offerService.UpdateOffer(offer, existingOffer);
+
+            if(result) return new AcceptedResult();
+
+            return new BadRequestObjectResult("Problem updating the offer");
         }
 
         [HttpDelete]
@@ -63,9 +75,9 @@ namespace api
 
             var result = await _offerService.DeleteOffer(offer);
 
-            if(result) return new NoContentResult();
+            if(result) return new AcceptedResult();
 
-            return new BadRequestObjectResult("Problem deleting offer");
+            return new BadRequestObjectResult("Problem deleting the offer");
         }
 
     }

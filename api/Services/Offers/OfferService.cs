@@ -7,23 +7,24 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using api.Models;
 using api.Enums;
+using System.Globalization;
 
 namespace api.Services {
     public class OfferService : IOfferService
     {
+        private readonly object addLock = new object();
         private readonly MyContext _context;
 
         public OfferService(MyContext myContext) {
             _context = myContext;
         }
 
-        public async Task<bool> AddOffer(AddOfferViewModel offer)
+        public async Task<Offer> AddOffer(AddOfferViewModel offer)
         {
-            
             var newOffer = new Offer()
             {
                 Id = Guid.NewGuid(),
-                ShipmentNumber = await GenerateRunningNo(),
+                ShipmentNumber = GenerateRunningNo(),
                 Currency = offer.Currency,
                 DeliveryDateTime = offer.DeliveryDateTime,
                 DeliveryLocationName = offer.DeliveryLocationName,
@@ -39,7 +40,9 @@ namespace api.Services {
 
             _context.Add(newOffer);
 
-            return await _context.SaveChangesAsync() > 0;
+            if (await _context.SaveChangesAsync() > 0) return newOffer;
+
+            return null;
         }
 
         public async Task<bool> DeleteOffer(Offer offer)
@@ -77,59 +80,49 @@ namespace api.Services {
             return offers;
         }
 
-        public async Task<bool> UpdateOffer(OfferViewModel offer)
+        public async Task<bool> UpdateOffer(OfferViewModel offer,Offer existingOffer)
         {
 
-            var updateOffer = new Offer()
-            {
-                ShipmentNumber = offer.ShipmentNumber,
-                Currency = offer.Currency,
-                DeliveryDateTime = offer.DeliveryDateTime,
-                DeliveryLocationName = offer.DeliveryLocationName,
-                LoadDetail1 = offer.LoadDetail1,
-                LoadDetail2 = offer.LoadDetail2,
-                LoadDetail3 = offer.LoadDetail3,
-                PickupDateTime = offer.PickupDateTime,
-                PickupLocationName = offer.PickupLocationName,
-                Price = offer.Price,
-                VehicleBuildUp = offer.VehicleBuildUp,
-                VehicleSize = offer.VehicleSize
-            };
+            existingOffer.ShipmentNumber = offer.ShipmentNumber;
+            existingOffer.Currency = offer.Currency;
+            existingOffer.DeliveryDateTime = offer.DeliveryDateTime;
+            existingOffer.DeliveryLocationName = offer.DeliveryLocationName;
+            existingOffer.LoadDetail1 = offer.LoadDetail1;
+            existingOffer.LoadDetail2 = offer.LoadDetail2;
+            existingOffer.LoadDetail3 = offer.LoadDetail3;
+            existingOffer.PickupDateTime = offer.PickupDateTime;
+            existingOffer.PickupLocationName = offer.PickupLocationName;
+            existingOffer.Price = offer.Price;
+            existingOffer.VehicleBuildUp = offer.VehicleBuildUp;
+            existingOffer.VehicleSize = offer.VehicleSize;
 
-            _context.Entry(updateOffer).State = EntityState.Modified;
+            _context.Entry(existingOffer).State = EntityState.Modified;
 
             return await _context.SaveChangesAsync() > 0;
         }
 
-        private async Task<string> GenerateRunningNo(){
+        private string GenerateRunningNo(){
 
-            var runningNo = await _context.Offers.MaxAsync(x=>x.ShipmentNumber);
+            var newRunningNo = "";
+
+            var runningNo = _context.Offers.Max(x=>x.ShipmentNumber);
+
+            if (!string.IsNullOrEmpty(runningNo))
+            {
+                string[] splitRunningNo = runningNo.Split("-", 2);
+
+                string dtRunningNo = splitRunningNo[0].Replace("S","");
+
+                newRunningNo = splitRunningNo[1];
+
+                if(!dtRunningNo.Equals(DateTime.UtcNow.ToString("yyMMdd"))) newRunningNo = "0";
+            }
             
-            var currentNo = $"S{DateTime.UtcNow.ToString("YYMMDD")}-{Convert.ToInt32(runningNo.Split("-",4)) + 1}";
+            var currentNo = $"S{DateTime.UtcNow.ToString("yyMMdd")}-{(Convert.ToInt32(newRunningNo) + 1).ToString().PadLeft(4,'0')}";
 
             return currentNo;
 
-            // var runningNo = await _context.RunningNo.FirstOrDefaultAsync(x=>x.Type == RunningNoType.SHIPMENTNUMBER.ToString());
-
-            // if(runningNo==null){
-
-            //     if(await AddRunningNo()) return $"S{runningNo.TodayDate.ToString("YYMMDD")}-";
-
-            // }
         }
 
-        // private async Task<bool> AddRunningNo(){
-        //     var newShipmentRunningNo = new RunningNo
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         Type = RunningNoType.SHIPMENTNUMBER.ToString(),
-        //         TodayDate = DateTime.UtcNow,
-        //         referenceNo = 1
-        //     };
-
-        //     await _context.RunningNo.AddAsync(newShipmentRunningNo);
-
-        //     return await _context.SaveChangesAsync() > 0;
-        // }
     }
 }

@@ -12,7 +12,6 @@ using System.Globalization;
 namespace api.Services {
     public class OfferService : IOfferService
     {
-        private readonly object addLock = new object();
         private readonly MyContext _context;
 
         public OfferService(MyContext myContext) {

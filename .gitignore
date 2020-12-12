@@ -1,3 +1,5 @@
 api/bin/
 api/.vs/
 .vs/Ezyhaul/config/applicationhost.config
+.vs/
+.vscode/

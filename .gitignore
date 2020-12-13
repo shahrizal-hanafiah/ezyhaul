@@ -3,3 +3,4 @@ api/.vs/
 .vs/Ezyhaul/config/applicationhost.config
 .vs/
 .vscode/
+web/dist/

@@ -57,6 +57,13 @@ namespace api.Services {
 
             return offer;
         }
+        public async Task<Offer> GetOfferByShipmentNumber(string shipmentNumber)
+        {
+             var offer = await _context.Offers.FirstOrDefaultAsync(x=>x.ShipmentNumber == shipmentNumber);
+
+            return offer;
+        }
+        
 
         public async Task<IEnumerable<OfferViewModel>> GetOffers()
         {

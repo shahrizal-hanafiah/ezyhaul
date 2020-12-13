@@ -55,6 +55,10 @@ namespace api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod()
+                .WithOrigins("http://localhost:4200"));
+
             app.UseRouting();
             app.UseCors(options => options.AllowAnyOrigin());
 

@@ -15,16 +15,16 @@ namespace api
         private readonly IOfferService _offerService;
         private static readonly IList<string> _vehicleSize = new List<string> { "1TON", "3TON", "5TON", "10TON" };
         private static readonly IList<string> _vehicleBuildUp = new List<string> { "Hardbox truck", "Canvas truck", "Open truck" };
-        private static readonly IList<string> _states = new List<string> { "Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Selangor","Terengganu","'W.P. Kuala Lumpur","W.P. Putrajaya"};
+        private static readonly IList<string> _states = new List<string> { "Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Selangor","Terengganu","W.P. Kuala Lumpur","W.P. Putrajaya"};
         public OffersController(IOfferService offerService)
         {
             _offerService = offerService;
         }
 
-        [HttpGet("{id}",Name ="GetOffer")]
-        public async Task<ActionResult> GetOffer()
+        [HttpGet("shipmentNumber/{shipmentNumber}",Name ="GetOfferByShipNumber")]
+        public async Task<ActionResult> GetOfferByShipmentNumber(string shipmentNumber)
         {
-            var offers = await _offerService.GetOffers();
+            var offers = await _offerService.GetOfferByShipmentNumber(shipmentNumber);
             return new OkObjectResult(offers);
         }
 
@@ -56,7 +56,7 @@ namespace api
 
             var result = await _offerService.AddOffer(offer);
 
-            if(result!=null) return new CreatedAtRouteResult("GetOffer",new { id = result.Id});
+            if(result!=null) return new CreatedAtRouteResult("GetOfferByShipNumber",new { shipmentNumber = result.ShipmentNumber});
 
             return new BadRequestObjectResult("Problem adding the offer");
         }
@@ -80,8 +80,8 @@ namespace api
             return new BadRequestObjectResult("Problem updating the offer");
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> DeletOffer(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteOffer(Guid id)
         {
 
             var offer = await _offerService.GetOffer(id);

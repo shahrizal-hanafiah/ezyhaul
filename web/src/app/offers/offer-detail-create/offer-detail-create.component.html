@@ -1,1 +1,181 @@
-<p>offer-detail-create works!</p>
+<form [formGroup]="addOfferForm" (ngSubmit)="addOffer()" autocomplete="off">
+    <h2 mat-dialog-title style="margin-left:20px;">Add Offer</h2>
+    <div mat-dialog-content>
+        <mat-grid-list cols="2" rowHeight="4:1">
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Price</mat-label>
+                    <input type="hidden" [formControl]='addOfferForm.controls["currency"]'>
+                    <input [formControl]='addOfferForm.controls["price"]' name="price" id="price" type="number" placeholder="0.00"
+                        class="example-right-align" matInput>
+                    <span matPrefix>{{currency}}</span>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["price"].errors?.required && 
+                    (addOfferForm.controls["price"].dirty || addOfferForm.controls["price"].touched)'>Price is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Vehicle size</mat-label>
+                    <mat-select [formControl]='addOfferForm.controls["vehicleSize"]'>
+                        <mat-option value="1TON">1TON</mat-option>
+                        <mat-option value="3TON">3TON</mat-option>
+                        <mat-option value="5TON">5TON</mat-option>
+                        <mat-option value="10TON">10TON</mat-option>
+                    </mat-select>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["vehicleSize"].value === ""'>
+                        Vehicle size is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Vehicle build up</mat-label>
+                    <mat-select [formControl]='addOfferForm.controls["vehicleBuildUp"]'>
+                        <mat-option value="Hardbox truck">Hardbox truck</mat-option>
+                        <mat-option value="Canvas truck">Canvas truck</mat-option>
+                        <mat-option value="Open truck">Open truck</mat-option>
+                    </mat-select>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["vehicleBuildUp"].value === ""'>Vehicle build up is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Pickup location</mat-label>
+                    <mat-select [formControl]='addOfferForm.controls["pickupLocationName"]'>
+                        <mat-option value="Johor">Johor</mat-option>
+                        <mat-option value="Kedah">Kedah</mat-option>
+                        <mat-option value="Kelantan">Kelantan</mat-option>
+                        <mat-option value="Melaka">Melaka</mat-option>
+                        <mat-option value="Negeri Sembilan">Negeri Sembilan</mat-option>
+                        <mat-option value="Pahang">Pahang</mat-option>
+                        <mat-option value="Perak">Perak</mat-option>
+                        <mat-option value="Perlis">Perlis</mat-option>
+                        <mat-option value="Pulau Pinang">Pulau Pinang</mat-option>
+                        <mat-option value="Selangor">Selangor</mat-option>
+                        <mat-option value="Terengganu">Terengganu</mat-option>
+                        <mat-option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</mat-option>
+                        <mat-option value="W.P. Putrajaya">W.P. Putrajaya</mat-option>
+                    </mat-select>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["pickupLocationName"].value === ""'>
+                        Pick up location is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Pickup date and time</mat-label>
+                    <input [formControl]='addOfferForm.controls["pickupDateTime"]' type="datetime-local" size="20" 
+                    placeholder="Please choose datetime" matInput>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["pickupDateTime"].errors?.required'>
+                        Pick up datetime is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Delivery location</mat-label>
+                    <mat-select [formControl]='addOfferForm.controls["deliveryLocationName"]'>
+                        <mat-option value="Johor">Johor</mat-option>
+                        <mat-option value="Kedah">Kedah</mat-option>
+                        <mat-option value="Kelantan">Kelantan</mat-option>
+                        <mat-option value="Melaka">Melaka</mat-option>
+                        <mat-option value="Negeri Sembilan">Negeri Sembilan</mat-option>
+                        <mat-option value="Pahang">Pahang</mat-option>
+                        <mat-option value="Perak">Perak</mat-option>
+                        <mat-option value="Perlis">Perlis</mat-option>
+                        <mat-option value="Pulau Pinang">Pulau Pinang</mat-option>
+                        <mat-option value="Selangor">Selangor</mat-option>
+                        <mat-option value="Terengganu">Terengganu</mat-option>
+                        <mat-option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</mat-option>
+                        <mat-option value="W.P. Putrajaya">W.P. Putrajaya</mat-option>
+                    </mat-select>
+                    <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["deliveryLocationName"].value === ""'>
+                        Pick up location is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Delivery date and time</mat-label>
+                    <input [formControl]='addOfferForm.controls["deliveryDateTime"]' type="datetime-local"
+                        placeholder="dd/MM/yyyy" class="example-right-align" matInput>
+                        <mat-hint [ngStyle]="{color: hintColor}" *ngIf='addOfferForm.controls["deliveryDateTime"].errors?.required'>
+                            Delivery date & time is required</mat-hint>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Load detail 1</mat-label>
+                    <textarea [formControl]='addOfferForm.controls["loadDetail1"]' matInput></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Load detail 2</mat-label>
+                    <textarea [formControl]='addOfferForm.controls["loadDetail2"]' matInput></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field>
+                    <mat-label>Load detail 3</mat-label>
+                    <textarea [formControl]='addOfferForm.controls["loadDetail3"]' matInput></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+    <div mat-dialog-actions align="end">
+        <button mat-button type="submit" mat-raised-button color="primary">Submit</button>
+        <button mat-button [mat-dialog-close]="true" type="button" mat-raised-button color="warn">Cancel</button>
+    </div>
+</form>
+
+<!-- <form #addOfferForm="ngForm" id="addOfferForm" (ngSubmit)="addOffer()" autocomplete="off">
+    <h2 class="text-center text-primary">Add Offer</h2>
+    <hr>
+    <div class="form-group">
+        <h4 class="mt-2">Price</h4>
+        <input [(ngModel)]="offer.price" name="price" id="price" type="text" class="form-control">
+
+        <h4 class="mt-2">Currency</h4>
+        <input [(ngModel)]="offer.currency" name="currency" id="currency" type="text" class="form-control">
+
+        <h4 class="mt-2">Vehicle Size</h4>
+        <select [(ngModel)]="offer.vehicleSize" name="vehicleSize" id="vehicleSize">
+            <option value="1TON">1TON</option>
+            <option value="3TON">3TON</option>
+            <option value="5TON">5TON</option>
+            <option value="10TON">10TON</option>
+        </select>
+
+        <h4 class="mt-2">Vehicle Build Up</h4>
+        <select [(ngModel)]="offer.vehicleBuildUp" name="vehicleBuildUp" id="vehicleBuildUp">
+            <option value="Hardbox truck">Hardbox truck</option>
+            <option value="Canvas truck">Canvas truck</option>
+            <option value="Open truck">Open truck</option>
+        </select>
+
+        <h4 class="mt-2">Pickup Location</h4>
+        <select [(ngModel)]="offer.pickupLocationName" name="pickupLocationName" id="pickupLocationName">
+            <option value="Johor">Johor</option>
+            <option value="Kedah">Kedah</option>
+            <option value="Kelantan">Kelantan</option>
+            <option value="Melaka">Melaka</option>
+            <option value="Negeri Sembilan">Negeri Sembilan</option>
+            <option value="Pahang">Pahang</option>
+            <option value="Perak">Perak</option>
+            <option value="Perlis">Perlis</option>
+            <option value="Pulau Pinang">Pulau Pinang</option>
+            <option value="Selangor">Selangor</option>
+            <option value="Terengganu">Terengganu</option>
+            <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
+            <option value="W.P. Putrajaya">W.P. Putrajaya</option>
+        </select>
+
+        <h4 class="mt-2">Pickup date and time</h4>
+        <input [(ngModel)]="offer.pickupDateTime" name="pickupDateTime" id="pickupDateTime" type="date" class="form-control">
+
+    </div>
+
+    <div class="form-group" style="text-align: center;">
+        <button class="btn btn-success mr-2" type="submit">Submit</button>
+        <button class="btn btn-secondary mr-2" (click)="cancel()" type="button">Cancel</button>
+    </div>
+</form> -->

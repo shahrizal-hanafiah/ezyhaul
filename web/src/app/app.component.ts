@@ -19,3 +19,5 @@ import { Offer } from './models/offer';
 export class AppComponent {
   title = 'web';
 }
+
+
